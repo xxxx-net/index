@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <!-- 核心：阻止所有搜索引擎收录/抓取的关键标签 -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noodp, noydir">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="bingbot" content="noindex, nofollow">
+  <meta name="baiduspider" content="noindex, nofollow">
+  <meta name="360spider" content="noindex, nofollow">
+  <meta name="sogouspider" content="noindex, nofollow">
+  <!-- 禁止缓存和快照 -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <title>Portal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    :root {
+      --gradient-bg-main: linear-gradient(135deg, #11131a, #18131a);
+      --bg-card: rgba(26, 28, 40, 0.7);
+      --bg-btn-default: rgba(30, 34, 48, 0.8);
+      --bg-btn-hover: rgba(45, 50, 70, 0.9);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-btn: rgba(255, 255, 255, 0.05);
+      --text-primary: #e0e0e0;
+      --text-white: #fff;
+      --text-gray-light: #c5cde7;
+      --text-gray-dark: #6b7280;
+      --divider-color: #2d303d;
+      --radius-card: 24px;
+      --radius-btn: 14px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--gradient-bg-main);
+      color: var(--text-primary);
+      padding: 10px;
+      overflow-x: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+      padding: 56px 40px 44px;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      position: relative;
+      will-change: transform;
+    }
+
+    .info {
+      text-align: center;
+      margin-top: -8px;
+    }
+
+    .name {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 16px;
+    }
+
+    .bio {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.4;
+      background: linear-gradient(90deg, var(--text-gray-light), var(--text-white));
+      background-size: 300% 100%;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: textGradient 1.4s ease-out forwards;
+    }
+
+    .divider {
+      width: 100%;
+      max-width: 400px;
+      height: 2px;
+      margin: 0 auto;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(
+        ellipse at center,
+        var(--divider-color) 0%,
+        var(--divider-color) 35%,
+        rgba(45, 48, 61, 0.7) 60%,
+        rgba(45, 48, 61, 0) 100%
+      );
+    }
+
+    .divider::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(210, 220, 255, 0.7) 0%,
+        rgba(210, 220, 255, 0.3) 35%,
+        transparent 100%
+      );
+      transform: scaleX(0);
+      transform-origin: center;
+      animation: dividerFade 1.4s ease-out forwards;
+    }
+
+    @keyframes textGradient {
+      0% { background-position: -300% 0; }
+      100% { background-position: 0; }
+    }
+
+    @keyframes dividerFade {
+      0% { transform: scaleX(0); opacity: 1; }
+      50% { opacity: 1; }
+      100% { transform: scaleX(1); opacity: 0; }
+    }
+
+    .links {
+      width: 100%;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      width: 110px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: var(--bg-btn-default);
+      border: 1px solid var(--border-btn);
+      border-radius: var(--radius-btn);
+      color: var(--text-primary);
+      font-size: 15px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover {
+      background: var(--bg-btn-hover);
+      color: var(--text-white);
+      transform: translateY(-2px);
+    }
+
+    .social {
+      display: flex;
+      gap: 26px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social a {
+      color: var(--text-gray-light);
+      font-size: 18px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .social a:hover {
+      color: var(--text-white);
+    }
+
+    .footer {
+      font-size: 11px;
+      color: var(--text-gray-dark);
+      margin-top: 0;
+    }
+
+    .year {
+      font-weight: 400;
+      color: var(--text-gray-dark);
+      transition: none;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 40px 20px 30px;
+      }
+      .divider {
+        max-width: calc(100% - 20px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <section class="info">
+      <h1 class="name">Hello</h1>
+      <p class="bio">All systems ready</p>
+    </section>
+
+    <hr class="divider">
+
+    <div class="links">
+      <a class="btn" href="https://pairdrop.net/">PairDrop</a>
+      <a class="btn" href="http://openlist.xxx.cloudns.org/">OpenList</a>
+      <a class="btn" href="https://chat.xxx.cloudns.org/">Chat</a>
+      <a class="btn" href="http://oooo.sylu.net/">链接A</a>
+      <a class="btn" href="#">链接B</a>
+      <a class="btn" href="#">链接C</a>
+    </div>
+
+    <hr class="divider">
+
+    <div class="social">
+      <a href="https://github.com/YOUR_GITHUB" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a href="https://t.me/YOUR_TELEGRAM" target="_blank" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+      <a href="https://x.com/YOUR_X" target="_blank" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="mailto:yourname@example.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+
+    <footer class="footer">
+      © <span class="year" id="dynamicYear">2026</span> All Rights Reserved
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('dynamicYear').textContent = new Date().getFullYear();
+    });
+  </script>
+</body>
+</html>
