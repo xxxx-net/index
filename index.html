@@ -16,9 +16,12 @@
   <meta http-equiv="Expires" content="0">
   
   <title>Portal</title>
+  <meta name="theme-color" content="#11131a">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
-    :root {
+    :root,
+    :root[data-theme="dark"] {
+      color-scheme: dark;
       --gradient-bg-main: linear-gradient(135deg, #11131a, #18131a);
       --bg-card: rgba(26, 28, 40, 0.7);
       --bg-btn-default: rgba(30, 34, 48, 0.8);
@@ -30,6 +33,29 @@
       --text-gray-light: #c5cde7;
       --text-gray-dark: #6b7280;
       --divider-color: #2d303d;
+      --divider-fade: rgba(45, 48, 61, 0.7);
+      --divider-glow-strong: rgba(210, 220, 255, 0.7);
+      --divider-glow-soft: rgba(210, 220, 255, 0.3);
+      --radius-card: 24px;
+      --radius-btn: 14px;
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --gradient-bg-main: linear-gradient(135deg, #eef1f8, #f6eff4);
+      --bg-card: rgba(255, 255, 255, 0.78);
+      --bg-btn-default: rgba(233, 236, 245, 0.85);
+      --bg-btn-hover: rgba(206, 213, 232, 0.95);
+      --border-card: rgba(0, 0, 0, 0.08);
+      --border-btn: rgba(0, 0, 0, 0.05);
+      --text-primary: #333a4d;
+      --text-white: #1b2130;
+      --text-gray-light: #4b5673;
+      --text-gray-dark: #8b93a8;
+      --divider-color: #cdd3e4;
+      --divider-fade: rgba(150, 158, 182, 0.7);
+      --divider-glow-strong: rgba(88, 108, 190, 0.5);
+      --divider-glow-soft: rgba(88, 108, 190, 0.2);
       --radius-card: 24px;
       --radius-btn: 14px;
     }
@@ -104,8 +130,8 @@
         ellipse at center,
         var(--divider-color) 0%,
         var(--divider-color) 35%,
-        rgba(45, 48, 61, 0.7) 60%,
-        rgba(45, 48, 61, 0) 100%
+        var(--divider-fade) 60%,
+        transparent 100%
       );
     }
 
@@ -115,8 +141,8 @@
       inset: 0;
       background: radial-gradient(
         ellipse at center,
-        rgba(210, 220, 255, 0.7) 0%,
-        rgba(210, 220, 255, 0.3) 35%,
+        var(--divider-glow-strong) 0%,
+        var(--divider-glow-soft) 35%,
         transparent 100%
       );
       transform: scaleX(0);
@@ -185,6 +211,46 @@
       color: var(--text-white);
     }
 
+    .theme-switcher {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      gap: 2px;
+      padding: 4px;
+      background: var(--bg-btn-default);
+      border: 1px solid var(--border-btn);
+      border-radius: 999px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .theme-btn {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text-gray-dark);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      color: var(--text-white);
+    }
+
+    .theme-btn.active {
+      background: var(--bg-btn-hover);
+      color: var(--text-white);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
     .footer {
       font-size: 11px;
       color: var(--text-gray-dark);
@@ -209,6 +275,12 @@
 </head>
 <body>
   <div class="card">
+    <div class="theme-switcher" role="group" aria-label="主题切换">
+      <button type="button" class="theme-btn" data-theme-choice="light" title="浅色主题" aria-label="浅色主题"><i class="fa-solid fa-sun"></i></button>
+      <button type="button" class="theme-btn" data-theme-choice="system" title="跟随系统" aria-label="跟随系统"><i class="fa-solid fa-display"></i></button>
+      <button type="button" class="theme-btn" data-theme-choice="dark" title="深色主题" aria-label="深色主题"><i class="fa-solid fa-moon"></i></button>
+    </div>
+
     <section class="info">
       <h1 class="name">Hello</h1>
       <p class="bio">All systems ready</p>
@@ -240,9 +312,53 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('dynamicYear').textContent = new Date().getFullYear();
-    });
+    (function () {
+      var STORAGE_KEY = 'portal-theme';
+      var root = document.documentElement;
+      var media = window.matchMedia('(prefers-color-scheme: light)');
+      var themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+      function getChoice() {
+        var stored = localStorage.getItem(STORAGE_KEY);
+        return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
+      }
+
+      function applyTheme(choice) {
+        var theme = choice === 'system' ? (media.matches ? 'light' : 'dark') : choice;
+        root.setAttribute('data-theme', theme);
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute('content', theme === 'light' ? '#eef1f8' : '#11131a');
+        }
+      }
+
+      function syncButtons(choice) {
+        document.querySelectorAll('.theme-btn').forEach(function (btn) {
+          btn.classList.toggle('active', btn.dataset.themeChoice === choice);
+        });
+      }
+
+      document.querySelectorAll('.theme-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var choice = btn.dataset.themeChoice;
+          localStorage.setItem(STORAGE_KEY, choice);
+          applyTheme(choice);
+          syncButtons(choice);
+        });
+      });
+
+      // 系统深浅色变化时，"跟随系统"模式实时响应
+      media.addEventListener('change', function () {
+        if (getChoice() === 'system') applyTheme('system');
+      });
+
+      var initialChoice = getChoice();
+      applyTheme(initialChoice);
+      syncButtons(initialChoice);
+
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('dynamicYear').textContent = new Date().getFullYear();
+      });
+    })();
   </script>
 </body>
 
